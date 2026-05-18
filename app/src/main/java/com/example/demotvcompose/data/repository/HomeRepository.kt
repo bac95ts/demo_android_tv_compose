@@ -1,12 +1,13 @@
 package com.example.demotvcompose.data.repository
 
 import com.example.demotvcompose.data.api.ApiService
-import com.example.demotvcompose.data.model.LauncherItem
+import com.example.demotvcompose.model.LauncherItemModel
 
 class HomeRepository(private val apiService: ApiService) {
-    suspend fun getLauncherItems(): List<LauncherItem> {
+    suspend fun getLauncherItems(): List<LauncherItemModel> {
         return try {
-            apiService.getLauncherHome().data ?: emptyList()
+            val dtoData = apiService.getLauncherHome().data ?: emptyList()
+            dtoData.map { LauncherItemModel.fromDto(it) }
         } catch (e: Exception) {
             emptyList()
         }
