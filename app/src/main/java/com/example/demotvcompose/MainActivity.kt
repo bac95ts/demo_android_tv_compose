@@ -10,9 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.tv.material3.ExperimentalTvMaterial3Api
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
-//import androidx.tv.material3.SurfaceDefaults
+import com.example.demotvcompose.ui.main.MainScreen
 import com.example.demotvcompose.ui.theme.DemoTVComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,12 +22,9 @@ class MainActivity : ComponentActivity() {
             DemoTVComposeTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-//                    colors = SurfaceDefaults.colors(
-//                        containerColor = MaterialTheme.colorScheme.background
-//                    ),
                     shape = RectangleShape
                 ) {
-                    Greeting("Android")
+                    MainScreen()
                 }
             }
         }
@@ -47,6 +43,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     DemoTVComposeTheme {
-        Greeting("Android")
+        MainScreen()
     }
 }
