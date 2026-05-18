@@ -1,33 +1,35 @@
 package com.example.demotvcompose.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.darkColorScheme
-import androidx.tv.material3.lightColorScheme
+
+// TV Apps are predominantly Dark Mode.
+@OptIn(ExperimentalTvMaterial3Api::class)
+private val VTVDarkColorScheme = darkColorScheme(
+    primary = VTVRed,
+    secondary = VTVRedDark,
+    tertiary = VTVGreen,
+    background = BackgroundDark,
+    surface = SurfaceDark,
+    onPrimary = TextPrimary,
+    onSecondary = TextPrimary,
+    onBackground = TextPrimary,
+    onSurface = TextPrimary,
+    surfaceVariant = SurfaceDarkHover,
+    onSurfaceVariant = TextSecondary,
+    border = FocusOutline
+)
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun DemoTVComposeTheme(
-    isInDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = if (isInDarkTheme) {
-        darkColorScheme(
-            primary = Purple80,
-            secondary = PurpleGrey80,
-            tertiary = Pink80
-        )
-    } else {
-        lightColorScheme(
-            primary = Purple40,
-            secondary = PurpleGrey40,
-            tertiary = Pink40
-        )
-    }
+    // Force dark theme for TV media application
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = VTVDarkColorScheme,
         typography = Typography,
         content = content
     )

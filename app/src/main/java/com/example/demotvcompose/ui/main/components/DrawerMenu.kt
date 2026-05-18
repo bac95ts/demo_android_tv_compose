@@ -13,6 +13,8 @@ import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 
+import androidx.tv.material3.MaterialTheme
+
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun DrawerMenu(
@@ -25,7 +27,7 @@ fun DrawerMenu(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .background(if (isClosed) Color.Transparent else Color(0xCC000000))
+            .background(if (isClosed) Color.Transparent else MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
             .padding(vertical = 32.dp, horizontal = if (isClosed) 0.dp else 16.dp),
         horizontalAlignment = Alignment.Start
     ) {
@@ -36,36 +38,37 @@ fun DrawerMenu(
                 onClick = { onMenuSelected(title) },
                 modifier = Modifier
                     .padding(vertical = 4.dp)
-                    .height(48.dp)
+                    .height(56.dp)
                     .then(
                         if (isClosed) {
                             Modifier.width(1.dp) // Chiều rộng 1dp để tàng hình nhưng vẫn bắt được focus
                         } else {
-                            Modifier.width(200.dp)
+                            Modifier.width(220.dp)
                         }
                     ),
                 colors = ClickableSurfaceDefaults.colors(
-                    containerColor = if (isSelected && !isClosed) Color.White else Color.Transparent,
-                    focusedContainerColor = if (isClosed) Color.Transparent else Color.White.copy(alpha = 0.8f)
+                    containerColor = if (isSelected && !isClosed) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    focusedContainerColor = if (isClosed) Color.Transparent else MaterialTheme.colorScheme.primary
                 ),
-                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp))
+                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(12.dp))
             ) {
                 if (!isClosed) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 12.dp)
+                            .padding(horizontal = 16.dp)
                     ) {
                         Box(
                             modifier = Modifier
                                 .size(24.dp)
-                                .background(if (isSelected) Color.Black else Color.Gray)
+                                .background(if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             text = title,
-                            color = if (isSelected) Color.Black else Color.White
+                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }

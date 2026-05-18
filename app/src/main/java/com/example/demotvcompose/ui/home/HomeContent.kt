@@ -20,6 +20,10 @@ import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import com.example.demotvcompose.ui.home.viewmodel.HomeViewModel
 
+import androidx.tv.material3.MaterialTheme
+import com.example.demotvcompose.ui.theme.VTVRed
+import com.example.demotvcompose.ui.theme.VTVGreen
+
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun HomeContent(
@@ -31,7 +35,7 @@ fun HomeContent(
 
     Column(
         modifier = modifier
-            .background(Color(0xFF141414)) // Dark background
+            .background(MaterialTheme.colorScheme.background)
             .padding(32.dp)
     ) {
         // Top Bar
@@ -39,7 +43,11 @@ fun HomeContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            Text(text = "10:11\nT2 - 18/05", color = Color.White)
+            Text(
+                text = "10:11\nT2 - 18/05", 
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
         
         Spacer(modifier = Modifier.height(32.dp))
@@ -47,7 +55,7 @@ fun HomeContent(
         // Carousel from API
         if (isLoading) {
             Box(modifier = Modifier.fillMaxWidth().height(300.dp), contentAlignment = Alignment.Center) {
-                Text("Loading...", color = Color.White)
+                Text("Loading...", color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.titleMedium)
             }
         } else if (launcherItems.isNotEmpty()) {
             val listState = rememberLazyListState(initialFirstVisibleItemIndex = Int.MAX_VALUE / 2)
@@ -70,9 +78,17 @@ fun HomeContent(
                             .width(if (isFocused) 550.dp else 450.dp)
                             .height(if (isFocused) 300.dp else 220.dp)
                             .onFocusChanged { isFocused = it.isFocused },
-                        shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp))
+                        shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp)),
+                        colors = ClickableSurfaceDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            pressedContainerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        border = ClickableSurfaceDefaults.border(
+                            focusedBorder = androidx.tv.material3.Border(androidx.compose.foundation.BorderStroke(3.dp, MaterialTheme.colorScheme.border), shape = RoundedCornerShape(16.dp))
+                        )
                     ) {
-                        Box(modifier = Modifier.fillMaxSize().background(Color.DarkGray)) {
+                        Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
                             AsyncImage(
                                 model = item.image,
                                 contentDescription = item.title,
@@ -83,14 +99,15 @@ fun HomeContent(
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .background(Color.Black.copy(alpha = 0.5f))
+                                        .background(Color.Black.copy(alpha = 0.6f))
                                 )
                                 Text(
                                     text = item.title,
-                                    color = Color.White,
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    style = MaterialTheme.typography.titleMedium,
                                     modifier = Modifier
                                         .align(Alignment.BottomStart)
-                                        .padding(16.dp)
+                                        .padding(24.dp)
                                 )
                             }
                         }
@@ -111,10 +128,19 @@ fun HomeContent(
                     modifier = Modifier
                         .width(120.dp)
                         .height(60.dp),
-                    shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp))
+                    shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp)),
+                    colors = ClickableSurfaceDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        focusedContainerColor = MaterialTheme.colorScheme.primary,
+                        pressedContainerColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
-                    Box(modifier = Modifier.fillMaxSize().background(Color.DarkGray), contentAlignment = Alignment.Center) {
-                        Text("VTV ${index + 1}", color = Color.White)
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "VTV ${index + 1}", 
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
             }
