@@ -14,6 +14,7 @@ import androidx.tv.material3.Surface
 import com.example.demotvcompose.ui.main.MainScreen
 import com.example.demotvcompose.ui.theme.DemoTVComposeTheme
 
+
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalTvMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {

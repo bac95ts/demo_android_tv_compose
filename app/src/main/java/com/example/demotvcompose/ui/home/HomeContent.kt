@@ -4,19 +4,31 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.ExperimentalTvMaterial3Api
-import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
+import androidx.tv.material3.Surface
+import coil.compose.AsyncImage
+import org.koin.androidx.compose.koinViewModel
+import com.example.demotvcompose.ui.home.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
-fun HomeContent(modifier: Modifier = Modifier) {
+fun HomeContent(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = koinViewModel()
+) {
+    val launcherItems by viewModel.launcherItems.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
     Column(
         modifier = modifier
             .background(Color(0xFF141414)) // Dark background
@@ -32,51 +44,64 @@ fun HomeContent(modifier: Modifier = Modifier) {
         
         Spacer(modifier = Modifier.height(32.dp))
         
-        // Carousel Placeholder
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Left partially visible item
-            Surface(
-                onClick = {},
-                modifier = Modifier
-                    .weight(1f)
-                    .height(200.dp),
-                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp))
-            ) {
-                Box(modifier = Modifier.fillMaxSize().background(Color.DarkGray))
+        // Carousel from API
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxWidth().height(300.dp), contentAlignment = Alignment.Center) {
+                Text("Loading...", color = Color.White)
             }
-            
-            // Center Feature
-            Surface(
-                onClick = {},
-                modifier = Modifier
-                    .weight(3f)
-                    .height(300.dp),
-                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp))
+        } else if (launcherItems.isNotEmpty()) {
+            val listState = rememberLazyListState(initialFirstVisibleItemIndex = Int.MAX_VALUE / 2)
+            LazyRow(
+                state = listState,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 100.dp), // Center padding to show adjacent items
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(modifier = Modifier.fillMaxSize().background(Color.Gray), contentAlignment = Alignment.BottomStart) {
-                    Text("Featured Content", color = Color.White, modifier = Modifier.padding(16.dp))
+                items(Int.MAX_VALUE) { i ->
+                    val index = i % launcherItems.size
+                    val item = launcherItems[index]
+                    
+                    var isFocused by remember { mutableStateOf(false) }
+                    
+                    Surface(
+                        onClick = {},
+                        modifier = Modifier
+                            .width(if (isFocused) 550.dp else 450.dp)
+                            .height(if (isFocused) 300.dp else 220.dp)
+                            .onFocusChanged { isFocused = it.isFocused },
+                        shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp))
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize().background(Color.DarkGray)) {
+                            AsyncImage(
+                                model = item.image,
+                                contentDescription = item.title,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            if (isFocused) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(Color.Black.copy(alpha = 0.5f))
+                                )
+                                Text(
+                                    text = item.title,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .align(Alignment.BottomStart)
+                                        .padding(16.dp)
+                                )
+                            }
+                        }
+                    }
                 }
-            }
-            
-            // Right partially visible item
-            Surface(
-                onClick = {},
-                modifier = Modifier
-                    .weight(1f)
-                    .height(200.dp),
-                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp))
-            ) {
-                Box(modifier = Modifier.fillMaxSize().background(Color.DarkGray))
             }
         }
         
         Spacer(modifier = Modifier.height(48.dp))
         
-        // Channel List
+        // Channel List (Keep as is)
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {

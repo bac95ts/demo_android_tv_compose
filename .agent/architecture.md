@@ -28,4 +28,4 @@ When implementing features, refer to the following standard implementations for 
 ## AI Assistant Directives
 - **Separation of Concerns**: Strictly separate business/data logic from UI logic.
 - **Component Reusability**: Build modular Compose components. Extract reusable UI elements into a `components` package.
-- **Dependency Injection**: Utilize Hilt for providing ViewModel dependencies and singletons across the app.
+- **Dependency Injection**: Utilize Koin for providing ViewModel dependencies, Repositories, and Network Singletons across the app. `DemoTVApplication` initializes Koin with `startKoin`. Use `koinViewModel()` inside Composable screens to inject ViewModels.
