@@ -20,3 +20,9 @@ val TextTertiary = Color(0xFF808080)
 // Accents & Focus
 val FocusOutline = Color(0xFFFFFFFF)
 val GlowColor = Color(0x66FFFFFF) // Semi-transparent white for glow effect
+
+// Custom Semantic Colors (Outside standard Material ColorScheme)
+val WarningYellow = Color(0xFFFFC107)
+val SuccessGreen = Color(0xFF4CAF50)
+val VipGold = Color(0xFFFFD700)
+val PremiumPurple = Color(0xFF9C27B0)

@@ -14,6 +14,7 @@ import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 
 import androidx.tv.material3.MaterialTheme
+import com.example.demotvcompose.ui.theme.customColors
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
@@ -67,7 +68,11 @@ fun DrawerMenu(
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             text = title,
-                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
+                            color = when {
+                                isSelected -> MaterialTheme.colorScheme.onPrimary
+                                title == "Mua gói" -> MaterialTheme.customColors.vip
+                                else -> MaterialTheme.colorScheme.onBackground
+                            },
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
