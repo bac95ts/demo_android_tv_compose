@@ -12,8 +12,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Surface
 import com.example.demotvcompose.ui.main.MainScreen
-import com.example.demotvcompose.ui.theme.DemoTVComposeTheme
+import com.example.demotvcompose.theme.DemoTVComposeTheme
 
+
+import com.example.demotvcompose.navigation.AppNavigation
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalTvMaterial3Api::class)
@@ -25,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     shape = RectangleShape
                 ) {
-                    MainScreen()
+                    AppNavigation()
                 }
             }
         }

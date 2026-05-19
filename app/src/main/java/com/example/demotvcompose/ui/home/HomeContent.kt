@@ -1,5 +1,6 @@
 package com.example.demotvcompose.ui.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.tv.material3.Border
 import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Text
@@ -21,17 +23,40 @@ import org.koin.androidx.compose.koinViewModel
 import com.example.demotvcompose.ui.home.viewmodel.HomeViewModel
 
 import androidx.tv.material3.MaterialTheme
-import com.example.demotvcompose.ui.theme.VTVRed
-import com.example.demotvcompose.ui.theme.VTVGreen
+
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.key.KeyEventType
+import kotlinx.coroutines.delay
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.focus.FocusDirection
+
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel(),
+    onItemClick: (String) -> Unit = {},
+    onRequestOpenDrawer: () -> Unit = {}
 ) {
     val launcherItems by viewModel.launcherItems.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+    val carouselSpacing = 16.dp
+    
+    // Fixed size per user request
+    val carouselItemWidth = 450.dp
+    val carouselItemHeight = 220.dp
+    // Compute padding to perfectly center the focused item
+    val horizontalPadding = (screenWidth - carouselItemWidth) / 2
 
     Column(
         modifier = modifier
@@ -58,12 +83,37 @@ fun HomeContent(
                 Text("Loading...", color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.titleMedium)
             }
         } else if (launcherItems.isNotEmpty()) {
-            val listState = rememberLazyListState(initialFirstVisibleItemIndex = Int.MAX_VALUE / 2)
+            val centerIndex = Int.MAX_VALUE / 2
+            val listState = rememberLazyListState(initialFirstVisibleItemIndex = centerIndex)
+            val focusManager = LocalFocusManager.current
+            var isCarouselFocused by remember { mutableStateOf(false) }
+            val initialFocusRequester = remember { FocusRequester() }
+            
+            LaunchedEffect(Unit) {
+                delay(100)
+                try {
+                    initialFocusRequester.requestFocus()
+                } catch (e: Exception) {}
+            }
+            
+            LaunchedEffect(listState, isCarouselFocused) {
+                while (true) {
+                    delay(4000)
+                    if (isCarouselFocused) {
+                        focusManager.moveFocus(FocusDirection.Right)
+                    } else if (!listState.isScrollInProgress) {
+                        listState.animateScrollToItem(listState.firstVisibleItemIndex + 1)
+                    }
+                }
+            }
+            
             LazyRow(
                 state = listState,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 100.dp), // Center padding to show adjacent items
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { isCarouselFocused = it.hasFocus },
+                horizontalArrangement = Arrangement.spacedBy(carouselSpacing),
+                contentPadding = PaddingValues(horizontal = horizontalPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(Int.MAX_VALUE) { i ->
@@ -73,19 +123,34 @@ fun HomeContent(
                     var isFocused by remember { mutableStateOf(false) }
                     
                     Surface(
-                        onClick = {},
+                        onClick = { onItemClick(item.id) },
                         modifier = Modifier
-                            .width(if (isFocused) 550.dp else 450.dp)
-                            .height(if (isFocused) 300.dp else 220.dp)
-                            .onFocusChanged { isFocused = it.isFocused },
+                            .width(carouselItemWidth)
+                            .height(carouselItemHeight)
+                            .then(if (i == centerIndex) Modifier.focusRequester(initialFocusRequester) else Modifier)
+                            .onFocusChanged { isFocused = it.isFocused }
+                            .onKeyEvent { keyEvent ->
+                                if (keyEvent.key == Key.DirectionUp && keyEvent.type == KeyEventType.KeyDown) {
+                                    onRequestOpenDrawer()
+                                    true
+                                } else {
+                                    false
+                                }
+                            },
                         shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(16.dp)),
                         colors = ClickableSurfaceDefaults.colors(
                             containerColor = MaterialTheme.colorScheme.surface,
                             focusedContainerColor = MaterialTheme.colorScheme.surface,
                             pressedContainerColor = MaterialTheme.colorScheme.surface
                         ),
+                        scale = ClickableSurfaceDefaults.scale(focusedScale = 1f),
                         border = ClickableSurfaceDefaults.border(
-                            focusedBorder = androidx.tv.material3.Border(androidx.compose.foundation.BorderStroke(3.dp, MaterialTheme.colorScheme.border), shape = RoundedCornerShape(16.dp))
+                            focusedBorder = Border(
+                                BorderStroke(
+                                    3.dp,
+                                    MaterialTheme.colorScheme.border
+                                ), shape = RoundedCornerShape(16.dp)
+                            )
                         )
                     ) {
                         Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {

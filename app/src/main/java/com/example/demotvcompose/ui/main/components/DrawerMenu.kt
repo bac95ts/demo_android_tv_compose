@@ -14,7 +14,7 @@ import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 
 import androidx.tv.material3.MaterialTheme
-import com.example.demotvcompose.ui.theme.customColors
+import com.example.demotvcompose.theme.customColors
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable

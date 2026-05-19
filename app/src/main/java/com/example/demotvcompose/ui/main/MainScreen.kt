@@ -11,11 +11,16 @@ import com.example.demotvcompose.ui.home.HomeContent
 import com.example.demotvcompose.ui.main.components.DrawerMenu
 import com.example.demotvcompose.ui.placeholder.PlaceholderScreen
 
+import kotlinx.coroutines.launch
+
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    onNavigateToPlayer: (String) -> Unit = {}
+) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var selectedMenu by remember { mutableStateOf("Trang chủ") }
+    val coroutineScope = rememberCoroutineScope()
 
     NavigationDrawer(
         drawerState = drawerState,
@@ -29,7 +34,13 @@ fun MainScreen() {
     ) {
         // Main Content based on selectedMenu
         when (selectedMenu) {
-            "Trang chủ" -> HomeContent(modifier = Modifier.fillMaxSize())
+            "Trang chủ" -> HomeContent(
+                modifier = Modifier.fillMaxSize(),
+                onItemClick = onNavigateToPlayer,
+                onRequestOpenDrawer = {
+                    coroutineScope.launch { drawerState.setValue(DrawerValue.Open) }
+                }
+            )
             else -> PlaceholderScreen(title = selectedMenu, modifier = Modifier.fillMaxSize())
         }
     }

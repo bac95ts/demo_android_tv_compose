@@ -1,4 +1,4 @@
-package com.example.demotvcompose.ui.theme
+package com.example.demotvcompose.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
