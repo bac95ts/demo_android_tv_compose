@@ -47,7 +47,8 @@ fun PlayerScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val hlsUrl = "https://vtvgolive-vtv.vtvdigital.vn/w3OJJm25R1UmEMzzpAI9yg/1779195209/vtvgo/vtv1-manifest.m3u8"
+//    val hlsUrl = "https://vtvgolive-vtv.vtvdigital.vn/w3OJJm25R1UmEMzzpAI9yg/1779195209/vtvgo/vtv1-manifest.m3u8"
+    val hlsUrl = "https://canal.mediaserver.com.co/live/buenisimatv.m3u8"
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
