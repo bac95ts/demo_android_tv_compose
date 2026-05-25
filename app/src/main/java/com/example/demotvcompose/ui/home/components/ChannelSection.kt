@@ -6,18 +6,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun ChannelSection(
-    onNavigateDown: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -29,15 +23,7 @@ fun ChannelSection(
                 onClick = {},
                 modifier = Modifier
                     .width(120.dp)
-                    .height(60.dp)
-                    .onKeyEvent { keyEvent ->
-                        if (keyEvent.key == Key.DirectionDown && keyEvent.type == KeyEventType.KeyDown) {
-                            onNavigateDown()
-                            true
-                        } else {
-                            false
-                        }
-                    },
+                    .height(60.dp),
                 shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp)),
                 colors = ClickableSurfaceDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,

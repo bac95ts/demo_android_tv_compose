@@ -1,21 +1,30 @@
 package com.example.demotvcompose.ui.home
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
+import coil.compose.AsyncImage
 import com.example.demotvcompose.model.LauncherItemModel
 import com.example.demotvcompose.theme.DemoTVComposeTheme
 import com.example.demotvcompose.ui.home.components.BottomNavigationHint
 import com.example.demotvcompose.ui.home.components.CarouselSection
 import com.example.demotvcompose.ui.home.components.ChannelSection
-import com.example.demotvcompose.ui.home.components.EmptyPageSection
 import com.example.demotvcompose.ui.home.viewmodel.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -48,42 +57,32 @@ fun HomeContentScreen(
     onItemClick: (String) -> Unit = {},
     onRequestOpenDrawer: () -> Unit = {}
 ) {
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
-    val carouselSpacing = 16.dp
+    val lazyListState = rememberLazyListState()
 
-    // Fixed size per user request
-    val carouselItemWidth = 450.dp
-    val carouselItemHeight = 220.dp
-    // Compute padding to perfectly center the focused item
-    val horizontalPadding = (screenWidth - carouselItemWidth) / 2
-
-    var currentPage by remember { mutableStateOf(0) }
+    // Determine if we are at the very top of the scroll list
+    val isScrolledToTop by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex == 0 && lazyListState.firstVisibleItemScrollOffset == 0
+        }
+    }
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        AnimatedContent(
-            targetState = currentPage,
-            transitionSpec = {
-                if (targetState > initialState) {
-                    (slideInVertically { height -> height } + fadeIn()) togetherWith
-                            (slideOutVertically { height -> -height } + fadeOut())
-                } else {
-                    (slideInVertically { height -> -height } + fadeIn()) togetherWith
-                            (slideOutVertically { height -> height } + fadeOut())
-                }
-            },
-            label = "PageTransition",
+        LazyColumn(
+            state = lazyListState,
             modifier = Modifier.fillMaxSize()
-        ) { page ->
-            if (page == 0) {
+        ) {
+            // Item 0: Takes exactly 100% of screen height
+            item {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp)
+                        .fillParentMaxHeight()
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                        .padding(top = 24.dp, bottom = 16.dp)
                 ) {
                     // Top Bar
                     Row(
@@ -97,55 +96,495 @@ fun HomeContentScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                    // Carousel from API
+                    // Carousel Section
                     CarouselSection(
                         launcherItems = launcherItems,
                         isLoading = isLoading,
-                        carouselItemWidth = carouselItemWidth,
-                        carouselItemHeight = carouselItemHeight,
-                        carouselSpacing = carouselSpacing,
-                        horizontalPadding = horizontalPadding,
+                        carouselItemWidth = 450.dp,
+                        carouselItemHeight = 220.dp,
+                        carouselSpacing = 16.dp,
+                        horizontalPadding = 0.dp,
                         onItemClick = onItemClick,
                         onRequestOpenDrawer = onRequestOpenDrawer
                     )
 
-                    Spacer(modifier = Modifier.height(48.dp))
-
-                    // Channel List
-                    ChannelSection(
-                        onNavigateDown = { currentPage = 1 }
-                    )
-
                     Spacer(modifier = Modifier.weight(1f))
 
-                    // Bottom Hint: "Kéo xuống để khám phá thêm"
-                    BottomNavigationHint(
+                    // Channel List Section
+                    ChannelSection()
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Bottom Navigation Hint (only visible when scrolled at the top)
+                    AnimatedVisibility(
+                        visible = isScrolledToTop,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
                         modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    ) {
+                        BottomNavigationHint()
+                    }
                 }
-            } else {
-                // Page Below (Empty UI)
-                EmptyPageSection(
-                    onNavigateUp = { currentPage = 0 }
+            }
+
+            // Gap spacer
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Item 1: Kênh DVR
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                ) {
+                    Text(
+                        text = "Kênh DVR",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(bottom = 8.dp)
+                    ) {
+                        items(2) { index ->
+                            val title = if (index == 0) "VTV2 DVR" else "VTV3 DVR"
+                            val imageUrl = "https://picsum.photos/320/180?random=${index + 1}"
+                            var isFocused by remember { mutableStateOf(false) }
+
+                            Surface(
+                                onClick = {},
+                                modifier = Modifier
+                                    .width(220.dp)
+                                    .height(124.dp)
+                                    .onFocusChanged { isFocused = it.isFocused },
+                                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp)),
+                                colors = ClickableSurfaceDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    pressedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                scale = ClickableSurfaceDefaults.scale(focusedScale = 1f),
+                                border = ClickableSurfaceDefaults.border(
+                                    focusedBorder = Border(
+                                        BorderStroke(
+                                            2.dp,
+                                            MaterialTheme.colorScheme.border
+                                        ), shape = RoundedCornerShape(8.dp)
+                                    )
+                                )
+                            ) {
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    AsyncImage(
+                                        model = imageUrl,
+                                        contentDescription = title,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                    if (isFocused) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(Color.Black.copy(alpha = 0.5f))
+                                        )
+                                    }
+                                    Text(
+                                        text = title,
+                                        color = if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.8f
+                                        ),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier
+                                            .align(Alignment.BottomStart)
+                                            .padding(8.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            val items = listOf(
+                Pair("Vietnam Today", "https://picsum.photos/320/180?random=3"),
+                Pair("VTV10", "https://picsum.photos/320/180?random=4"),
+                Pair(
+                    "Loạt đá luân lưu cân não",
+                    "https://picsum.photos/320/180?random=5"
+                ),
+                Pair(
+                    "Loạt đá luân lưu cân não 2",
+                    "https://picsum.photos/320/180?random=6"
+                ),
+                Pair(
+                    "Loạt đá luân lưu cân não 3",
+                    "https://picsum.photos/320/180?random=7"
+                ),
+                Pair(
+                    "Loạt đá luân lưu cân não 4",
+                    "https://picsum.photos/320/180?random=8"
                 )
+            )
+
+            // Gap spacer
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Item 2: Phim VTV
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                ) {
+                    Text(
+                        text = "Phim VTV",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(bottom = 8.dp)
+                    ) {
+                        items(items.size) { index ->
+                            val item = items[index]
+                            var isFocused by remember { mutableStateOf(false) }
+
+                            Surface(
+                                onClick = {},
+                                modifier = Modifier
+                                    .width(220.dp)
+                                    .height(124.dp)
+                                    .onFocusChanged { isFocused = it.isFocused },
+                                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp)),
+                                colors = ClickableSurfaceDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    pressedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                scale = ClickableSurfaceDefaults.scale(focusedScale = 1f),
+                                border = ClickableSurfaceDefaults.border(
+                                    focusedBorder = Border(
+                                        BorderStroke(
+                                            2.dp,
+                                            MaterialTheme.colorScheme.border
+                                        ), shape = RoundedCornerShape(8.dp)
+                                    )
+                                )
+                            ) {
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    AsyncImage(
+                                        model = item.second,
+                                        contentDescription = item.first,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                    if (isFocused) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(Color.Black.copy(alpha = 0.5f))
+                                        )
+                                    }
+                                    Text(
+                                        text = item.first,
+                                        color = if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.8f
+                                        ),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier
+                                            .align(Alignment.BottomStart)
+                                            .padding(8.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Gap spacer
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Item 3: Phim VTV
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                ) {
+                    Text(
+                        text = "Phim VTV",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(bottom = 8.dp)
+                    ) {
+                        items(items.size) { index ->
+                            val item = items[index]
+                            var isFocused by remember { mutableStateOf(false) }
+
+                            Surface(
+                                onClick = {},
+                                modifier = Modifier
+                                    .width(220.dp)
+                                    .height(124.dp)
+                                    .onFocusChanged { isFocused = it.isFocused },
+                                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp)),
+                                colors = ClickableSurfaceDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    pressedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                scale = ClickableSurfaceDefaults.scale(focusedScale = 1f),
+                                border = ClickableSurfaceDefaults.border(
+                                    focusedBorder = Border(
+                                        BorderStroke(
+                                            2.dp,
+                                            MaterialTheme.colorScheme.border
+                                        ), shape = RoundedCornerShape(8.dp)
+                                    )
+                                )
+                            ) {
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    AsyncImage(
+                                        model = item.second,
+                                        contentDescription = item.first,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                    if (isFocused) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(Color.Black.copy(alpha = 0.5f))
+                                        )
+                                    }
+                                    Text(
+                                        text = item.first,
+                                        color = if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.8f
+                                        ),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier
+                                            .align(Alignment.BottomStart)
+                                            .padding(8.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Gap spacer
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Item 4: Phim VTV
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                ) {
+                    Text(
+                        text = "Phim VTV",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(bottom = 8.dp)
+                    ) {
+                        items(items.size) { index ->
+                            val item = items[index]
+                            var isFocused by remember { mutableStateOf(false) }
+
+                            Surface(
+                                onClick = {},
+                                modifier = Modifier
+                                    .width(220.dp)
+                                    .height(124.dp)
+                                    .onFocusChanged { isFocused = it.isFocused },
+                                shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp)),
+                                colors = ClickableSurfaceDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    pressedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                scale = ClickableSurfaceDefaults.scale(focusedScale = 1f),
+                                border = ClickableSurfaceDefaults.border(
+                                    focusedBorder = Border(
+                                        BorderStroke(
+                                            2.dp,
+                                            MaterialTheme.colorScheme.border
+                                        ), shape = RoundedCornerShape(8.dp)
+                                    )
+                                )
+                            ) {
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    AsyncImage(
+                                        model = item.second,
+                                        contentDescription = item.first,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                    if (isFocused) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(Color.Black.copy(alpha = 0.5f))
+                                        )
+                                    }
+                                    Text(
+                                        text = item.first,
+                                        color = if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.8f
+                                        ),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier
+                                            .align(Alignment.BottomStart)
+                                            .padding(8.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // End spacing spacer
+            item {
+                Spacer(modifier = Modifier.height(48.dp))
             }
         }
     }
 }
 
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeContentPreview() {
+//    DemoTVComposeTheme {
+//        HomeContentScreen(
+//            launcherItems = listOf(
+//                LauncherItemModel("1", "VTV1 Live", "https://picsum.photos/450/220"),
+//                LauncherItemModel("2", "VTV2 HD", "https://picsum.photos/450/220"),
+//                LauncherItemModel("3", "VTV3 Live", "https://picsum.photos/450/220")
+//            ),
+//            isLoading = false
+//        )
+//    }
+//}
+
 @Preview(showBackground = true)
 @Composable
-fun HomeContentPreview() {
+fun ContentPreview() {
     DemoTVComposeTheme {
-        HomeContentScreen(
-            launcherItems = listOf(
-                LauncherItemModel("1", "VTV1 Live", "https://picsum.photos/450/220"),
-                LauncherItemModel("2", "VTV2 HD", "https://picsum.photos/450/220"),
-                LauncherItemModel("3", "VTV3 Live", "https://picsum.photos/450/220")
+
+        val items = listOf(
+            Pair("Vietnam Today", "https://picsum.photos/320/180?random=3"),
+            Pair("VTV10", "https://picsum.photos/320/180?random=4"),
+            Pair(
+                "Loạt đá luân lưu cân não",
+                "https://picsum.photos/320/180?random=5"
             ),
-            isLoading = false
+            Pair(
+                "Loạt đá luân lưu cân não 2",
+                "https://picsum.photos/320/180?random=6"
+            ),
+            Pair(
+                "Loạt đá luân lưu cân não 3",
+                "https://picsum.photos/320/180?random=7"
+            ),
+            Pair(
+                "Loạt đá luân lưu cân não 4",
+                "https://picsum.photos/320/180?random=8"
+            )
         )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp)
+        ) {
+            Text(
+                text = "Phim VTV",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 8.dp)
+            ) {
+                items(items.size) { index ->
+                    val item = items[index]
+                    var isFocused by remember { mutableStateOf(false) }
+
+                    Surface(
+                        onClick = {},
+                        modifier = Modifier
+                            .width(220.dp)
+                            .height(124.dp)
+                            .onFocusChanged { isFocused = it.isFocused },
+                        shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(8.dp)),
+                        colors = ClickableSurfaceDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            pressedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                        ),
+                        scale = ClickableSurfaceDefaults.scale(focusedScale = 1f),
+                        border = ClickableSurfaceDefaults.border(
+                            focusedBorder = Border(
+                                BorderStroke(
+                                    2.dp,
+                                    MaterialTheme.colorScheme.border
+                                ), shape = RoundedCornerShape(8.dp)
+                            )
+                        )
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            AsyncImage(
+                                model = item.second,
+                                contentDescription = item.first,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            if (isFocused) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(Color.Black.copy(alpha = 0.5f))
+                                )
+                            }
+                            Text(
+                                text = item.first,
+                                color = if (isFocused) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = 0.8f
+                                ),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .padding(8.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.demotvcompose.ui.placeholder
+package com.example.demotvcompose.ui_kit.placeholder
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
