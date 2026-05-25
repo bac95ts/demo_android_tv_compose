@@ -7,19 +7,17 @@ import androidx.tv.material3.DrawerValue
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.NavigationDrawer
 import androidx.tv.material3.rememberDrawerState
-import androidx.navigation.NavController
+import com.example.demotvcompose.navigation.LocalNavController
+import com.example.demotvcompose.navigation.Screen
 import com.example.demotvcompose.ui.home.HomeContent
 import com.example.demotvcompose.ui.main.components.DrawerMenu
 import com.example.demotvcompose.ui_kit.placeholder.PlaceholderScreen
-
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
-fun MainScreen(
-    navController: NavController,
-    onNavigateToPlayer: (String) -> Unit = {}
-) {
+fun MainScreen() {
+    val navController = LocalNavController.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var selectedMenu by remember { mutableStateOf("Trang chủ") }
     val coroutineScope = rememberCoroutineScope()
@@ -31,13 +29,6 @@ fun MainScreen(
                 isClosed = drawerValue == DrawerValue.Closed,
                 selectedMenu = selectedMenu,
                 onMenuSelected = { selectedMenu = it }
-//                onMenuSelected = { title ->
-//                    if (title == "Tìm kiếm") {
-//                        navController.navigate("search")
-//                    } else {
-//                        selectedMenu = title
-//                    }
-//                }
             )
         }
     ) {
@@ -45,12 +36,14 @@ fun MainScreen(
         when (selectedMenu) {
             "Trang chủ" -> HomeContent(
                 modifier = Modifier.fillMaxSize(),
-                onItemClick = onNavigateToPlayer,
+                onItemClick = { id ->
+                    navController.navigate(Screen.Player.createRoute(id))
+                },
                 onRequestOpenDrawer = {
                     coroutineScope.launch { drawerState.setValue(DrawerValue.Open) }
                 }
             )
-            "Tìm kiếm" -> navController.navigate("search")
+            "Tìm kiếm" -> navController.navigate(Screen.Search.route)
             else -> PlaceholderScreen(title = selectedMenu, modifier = Modifier.fillMaxSize())
         }
     }

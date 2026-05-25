@@ -1,6 +1,7 @@
 package com.example.demotvcompose.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,28 +17,25 @@ import com.example.demotvcompose.ui.search.SearchScreen
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "main") {
-        composable("main") {
-            MainScreen(
-                navController = navController,
-                onNavigateToPlayer = { id ->
-                    navController.navigate("player/$id")
-                }
-            )
-        }
+    CompositionLocalProvider(LocalNavController provides navController) {
+        NavHost(navController = navController, startDestination = Screen.Main.route) {
+            composable(Screen.Main.route) {
+                MainScreen()
+            }
 
-        composable("search") {
-            SearchScreen(
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        
-        composable(
-            route = "player/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id") ?: ""
-            PlayerScreen(id = id)
+            composable(Screen.Search.route) {
+                SearchScreen(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            
+            composable(
+                route = Screen.Player.route,
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id") ?: ""
+                PlayerScreen(id = id)
+            }
         }
     }
 }
