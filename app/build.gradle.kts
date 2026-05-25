@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.demotvcompose"
+    namespace = "vn.vtv.vtvgotv"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.demotvcompose"
+        applicationId = "vn.vtv.vtvgotv"
         minSdk = 23
         targetSdk = 36
         versionCode = 1

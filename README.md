@@ -51,26 +51,23 @@ Dự án sử dụng thư viện **Koin** (Dependency Injection) :
 ## 📂 Cấu trúc mã nguồn chính
 
 ```text
-app/src/main/java/com/example/demotvcompose/
+app/src/main/java/vn/vtv/vtvgotv/
 │
-├── data/                  # Lớp Dữ liệu (Data Layer)
-│   ├── api/               # API Retrofit & DTOs
-│   └── repository/        # Repositories (HomeRepository, AccountRepository)
+├── core/                  # Tầng lõi dùng chung (Core Layer)
+│   ├── theme/             # Cấu hình Theme, Color, Typography cho TV
+│   ├── network/           # Cấu hình OkHttpClient, Retrofit, Interceptors
+│   ├── di/                # Koin Core Injection Module
+│   └── utils/             # Các Extension hữu ích & DateTimeFormatter
 │
-├── di/                    # Dependency Injection (Koin AppModule)
+├── features/              # Tầng tính năng (Feature Layer - Clean Architecture)
+│   ├── auth/              # Tính năng Đăng nhập & Xác thực 2 bước
+│   ├── home/              # Tính năng Trang chủ (Carousel, Channels, DVR)
+│   ├── player/            # Tính năng Trình phát Video (Media3 ExoPlayer)
+│   └── search/            # Tính năng Tìm kiếm & Custom TV Keyboard
 │
-├── model/                 # Lớp Thực thể Dữ liệu (Domain/Data Models)
+├── navigation/            # Định tuyến Điều hướng (AppNavigation, Screen)
 │
-├── navigation/            # Định tuyến Điều hướng (AppNavigation, Screen, LocalNavController)
-│
-├── theme/                 # Tùy biến Màu sắc, Phông chữ & Theme TV
-│
-└── ui/                    # Lớp Giao diện (Presentation Layer)
-    ├── account/           # Giao diện Đăng nhập & Xác thực 2 bước
-    ├── home/              # Giao diện Trang chủ (Carousel, Channel List, Section)
-    ├── main/              # Trình điều khiển chính (NavigationDrawer, DrawerMenu)
-    ├── player/            # Trình phát Video (Media3 ExoPlayer)
-    └── search/            # Giao diện Tìm kiếm & Bàn phím Smart TV
+└── di/                    # AppModule tổng hợp các Koin DI Modules
 ```
 
 
