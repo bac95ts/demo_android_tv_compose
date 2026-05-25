@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import com.example.demotvcompose.ui.main.MainScreen
 import com.example.demotvcompose.ui.player.PlayerScreen
 import com.example.demotvcompose.ui.search.SearchScreen
+import com.example.demotvcompose.ui.account.AccountManagementScreen
 
 @Composable
 fun AppNavigation() {
@@ -25,6 +26,15 @@ fun AppNavigation() {
 
             composable(Screen.Search.route) {
                 SearchScreen(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            composable(Screen.Account.route) {
+                AccountManagementScreen(
+                    onLoginSuccess = {
+                        navController.popBackStack()
+                    },
                     modifier = Modifier.fillMaxSize()
                 )
             }

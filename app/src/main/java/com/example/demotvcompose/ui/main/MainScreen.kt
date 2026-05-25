@@ -28,7 +28,13 @@ fun MainScreen() {
             DrawerMenu(
                 isClosed = drawerValue == DrawerValue.Closed,
                 selectedMenu = selectedMenu,
-                onMenuSelected = { selectedMenu = it }
+                onMenuSelected = { title ->
+                    when (title) {
+                        "Tìm kiếm" -> navController.navigate(Screen.Search.route)
+                        "Quản lý tài khoản" -> navController.navigate(Screen.Account.route)
+                        else -> selectedMenu = title
+                    }
+                }
             )
         }
     ) {
@@ -43,7 +49,6 @@ fun MainScreen() {
                     coroutineScope.launch { drawerState.setValue(DrawerValue.Open) }
                 }
             )
-            "Tìm kiếm" -> navController.navigate(Screen.Search.route)
             else -> PlaceholderScreen(title = selectedMenu, modifier = Modifier.fillMaxSize())
         }
     }

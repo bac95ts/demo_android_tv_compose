@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 sealed class Screen(val route: String) {
     object Main : Screen("main")
     object Search : Screen("search")
+    object Account : Screen("account")
     object Player : Screen("player/{id}") {
         fun createRoute(id: String) = "player/$id"
     }
