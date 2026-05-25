@@ -49,7 +49,7 @@ fun DrawerMenu(
                     ),
                 colors = ClickableSurfaceDefaults.colors(
                     containerColor = if (isSelected && !isClosed) MaterialTheme.colorScheme.primary else Color.Transparent,
-                    focusedContainerColor = if (isClosed) Color.Transparent else MaterialTheme.colorScheme.primary
+                    focusedContainerColor = if (isClosed) Color.Transparent else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                 ),
                 shape = ClickableSurfaceDefaults.shape(shape = RoundedCornerShape(12.dp))
             ) {
