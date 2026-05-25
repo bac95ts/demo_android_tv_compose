@@ -1,9 +1,13 @@
 package com.example.demotvcompose.di
 
-import com.example.demotvcompose.data.api.ApiService
-import com.example.demotvcompose.data.repository.HomeRepository
-import com.example.demotvcompose.data.repository.AccountRepository
-import com.example.demotvcompose.ui.home.viewmodel.HomeViewModel
+import com.example.demotvcompose.features.home.data.remote.api.HomeApiService
+import com.example.demotvcompose.features.home.data.remote.HomeRemote
+import com.example.demotvcompose.features.home.data.remote.HomeRemoteImpl
+import com.example.demotvcompose.features.home.data.HomeRepositoryImpl
+import com.example.demotvcompose.features.home.domain.HomeRepository
+import com.example.demotvcompose.features.auth.data.AuthRepositoryImpl
+import com.example.demotvcompose.features.auth.domain.AuthRepository
+import com.example.demotvcompose.features.home.presentation.viewmodel.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -29,15 +33,19 @@ val appModule = module {
     }
 
     single {
-        get<Retrofit>().create(ApiService::class.java)
+        get<Retrofit>().create(HomeApiService::class.java)
     }
 
-    single {
-        HomeRepository(get())
+    single<HomeRemote> {
+        HomeRemoteImpl(get())
     }
 
-    single {
-        AccountRepository(androidContext())
+    single<HomeRepository> {
+        HomeRepositoryImpl(get())
+    }
+
+    single<AuthRepository> {
+        AuthRepositoryImpl(androidContext())
     }
 
     viewModel {

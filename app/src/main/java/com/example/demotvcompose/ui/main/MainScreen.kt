@@ -9,9 +9,9 @@ import androidx.tv.material3.NavigationDrawer
 import androidx.tv.material3.rememberDrawerState
 import com.example.demotvcompose.navigation.LocalNavController
 import com.example.demotvcompose.navigation.Screen
-import com.example.demotvcompose.ui.home.HomeContent
+import com.example.demotvcompose.features.home.presentation.HomeScreen
 import com.example.demotvcompose.ui.main.components.DrawerMenu
-import com.example.demotvcompose.ui_kit.placeholder.PlaceholderScreen
+import com.example.demotvcompose.core.ui_kit.placeholder.PlaceholderScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalTvMaterial3Api::class)
@@ -36,7 +36,7 @@ fun MainScreen() {
     ) {
         // Main Content based on selectedMenu
         when (selectedMenu) {
-            "Trang chủ" -> HomeContent(
+            "Trang chủ" -> HomeScreen(
                 modifier = Modifier.fillMaxSize(),
                 onItemClick = { id ->
                     navController.navigate(Screen.Player.createRoute(id))

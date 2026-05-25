@@ -10,9 +10,9 @@ import androidx.navigation.navArgument
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxSize
 import com.example.demotvcompose.ui.main.MainScreen
-import com.example.demotvcompose.ui.player.PlayerScreen
-import com.example.demotvcompose.ui.search.SearchScreen
-import com.example.demotvcompose.ui.account.AccountManagementScreen
+import com.example.demotvcompose.features.player.presentation.PlayerScreen
+import com.example.demotvcompose.features.search.presentation.SearchScreen
+import com.example.demotvcompose.features.auth.presentation.AccountManagementScreen
 
 @Composable
 fun AppNavigation() {
