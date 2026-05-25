@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.tv.material3.*
 import com.example.demotvcompose.R
-import com.example.demotvcompose.theme.DemoTVComposeTheme
+import com.example.demotvcompose.core.theme.DemoTVComposeTheme
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable

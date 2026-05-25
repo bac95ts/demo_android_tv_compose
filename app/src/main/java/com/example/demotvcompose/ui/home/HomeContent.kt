@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import coil.compose.AsyncImage
 import com.example.demotvcompose.model.LauncherItemModel
-import com.example.demotvcompose.theme.DemoTVComposeTheme
+import com.example.demotvcompose.core.theme.DemoTVComposeTheme
 import com.example.demotvcompose.ui.home.components.BottomNavigationHint
 import com.example.demotvcompose.ui.home.components.CarouselSection
 import com.example.demotvcompose.ui.home.components.ChannelSection

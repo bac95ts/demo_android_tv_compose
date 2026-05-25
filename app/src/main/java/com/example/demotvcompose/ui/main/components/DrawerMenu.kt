@@ -16,7 +16,7 @@ import androidx.tv.material3.Text
 import androidx.compose.ui.res.stringResource
 import androidx.tv.material3.MaterialTheme
 import com.example.demotvcompose.R
-import com.example.demotvcompose.theme.customColors
+import com.example.demotvcompose.core.theme.customColors
 
 data class MenuItem(val route: String, val titleResId: Int)
 

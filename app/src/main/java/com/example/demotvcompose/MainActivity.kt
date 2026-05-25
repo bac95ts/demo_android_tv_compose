@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Surface
 import com.example.demotvcompose.ui.main.MainScreen
-import com.example.demotvcompose.theme.DemoTVComposeTheme
+import com.example.demotvcompose.core.theme.DemoTVComposeTheme
 
 
 import com.example.demotvcompose.navigation.AppNavigation

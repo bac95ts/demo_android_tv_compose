@@ -7,13 +7,23 @@ import com.example.demotvcompose.ui.home.viewmodel.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import com.example.demotvcompose.core.network.NetworkConfig
+import com.example.demotvcompose.core.network.HeaderInterceptor
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
     single {
+        OkHttpClient.Builder()
+            .addInterceptor(HeaderInterceptor())
+            .build()
+    }
+
+    single {
         Retrofit.Builder()
-            .baseUrl("https://cache-api-vtvgo.vtvdigital.vn/")
+            .baseUrl(NetworkConfig.BASE_URL)
+            .client(get<OkHttpClient>())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
