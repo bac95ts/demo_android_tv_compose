@@ -17,7 +17,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.tv.material3.*
+import com.example.demotvcompose.R
 import com.example.demotvcompose.theme.DemoTVComposeTheme
 
 @OptIn(ExperimentalTvMaterial3Api::class)
@@ -75,7 +77,7 @@ fun SearchScreen(
                 Box(modifier = Modifier.weight(1f)) {
                     if (searchQuery.isEmpty()) {
                         Text(
-                            text = "Tìm kiếm",
+                            text = stringResource(id = R.string.search_placeholder),
                             color = Color.White.copy(alpha = 0.4f),
                             style = MaterialTheme.typography.bodyLarge
                         )
@@ -266,7 +268,7 @@ fun KeyButton(
                 }
                 else -> {
                     Text(
-                        text = label,
+                        text = if (label == "XÓA") stringResource(id = R.string.keyboard_clear) else label,
                         color = if (isFocused) Color.Black else Color.White,
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Bold

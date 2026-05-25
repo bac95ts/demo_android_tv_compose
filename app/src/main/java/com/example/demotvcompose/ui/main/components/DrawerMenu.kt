@@ -13,8 +13,12 @@ import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 
+import androidx.compose.ui.res.stringResource
 import androidx.tv.material3.MaterialTheme
+import com.example.demotvcompose.R
 import com.example.demotvcompose.theme.customColors
+
+data class MenuItem(val route: String, val titleResId: Int)
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
@@ -23,7 +27,15 @@ fun DrawerMenu(
     selectedMenu: String,
     onMenuSelected: (String) -> Unit
 ) {
-    val menuItems = listOf("Quản lý tài khoản", "Evoucher", "Tìm kiếm", "Trang chủ", "Mua gói", "Truyền hình", "Cá nhân")
+    val menuItems = listOf(
+        MenuItem("Quản lý tài khoản", R.string.menu_account),
+        MenuItem("Evoucher", R.string.menu_evoucher),
+        MenuItem("Tìm kiếm", R.string.menu_search),
+        MenuItem("Trang chủ", R.string.menu_home),
+        MenuItem("Mua gói", R.string.menu_buy_package),
+        MenuItem("Truyền hình", R.string.menu_tv),
+        MenuItem("Cá nhân", R.string.menu_personal)
+    )
 
     Column(
         modifier = Modifier
@@ -32,11 +44,11 @@ fun DrawerMenu(
             .padding(vertical = 32.dp, horizontal = if (isClosed) 0.dp else 16.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        menuItems.forEach { title ->
-            val isSelected = title == selectedMenu
+        menuItems.forEach { item ->
+            val isSelected = item.route == selectedMenu
             
             Surface(
-                onClick = { onMenuSelected(title) },
+                onClick = { onMenuSelected(item.route) },
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .height(56.dp)
@@ -67,10 +79,10 @@ fun DrawerMenu(
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            text = title,
+                            text = stringResource(id = item.titleResId),
                             color = when {
                                 isSelected -> MaterialTheme.colorScheme.onPrimary
-                                title == "Mua gói" -> MaterialTheme.customColors.vip
+                                item.route == "Mua gói" -> MaterialTheme.customColors.vip
                                 else -> MaterialTheme.colorScheme.onBackground
                             },
                             style = MaterialTheme.typography.bodyLarge

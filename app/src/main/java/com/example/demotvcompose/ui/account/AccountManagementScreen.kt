@@ -16,7 +16,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.tv.material3.*
+import com.example.demotvcompose.R
 import com.example.demotvcompose.theme.DemoTVComposeTheme
 import com.example.demotvcompose.ui.search.KeyButton
 import kotlinx.coroutines.delay
@@ -115,7 +117,7 @@ fun AccountManagementScreen(
                                 Box(modifier = Modifier.weight(1f)) {
                                     if (emailInput.isEmpty()) {
                                         Text(
-                                            text = "Nhập email/số điện thoại",
+                                            text = stringResource(id = R.string.login_email_placeholder),
                                             color = Color.White.copy(alpha = 0.4f),
                                             style = MaterialTheme.typography.bodyLarge
                                         )
@@ -175,14 +177,17 @@ fun AccountManagementScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
+                        val emptyEmailError = stringResource(id = R.string.login_error_empty_email)
+                        val invalidEmailError = stringResource(id = R.string.login_error_invalid_email)
+                        
                         // Continue Button
                         ActionButton(
-                            text = "Tiếp tục",
+                            text = stringResource(id = R.string.btn_continue),
                             onClick = {
                                 if (emailInput.isEmpty()) {
-                                    emailError = "Vui lòng nhập Email"
+                                    emailError = emptyEmailError
                                 } else if (!validateEmail(emailInput)) {
-                                    emailError = "Email không đúng định dạng"
+                                    emailError = invalidEmailError
                                 } else {
                                     emailError = null
                                     isShiftActive =
@@ -223,7 +228,7 @@ fun AccountManagementScreen(
                                 Box(modifier = Modifier.weight(1f)) {
                                     if (passwordInput.isEmpty()) {
                                         Text(
-                                            text = "Nhập mật khẩu",
+                                            text = stringResource(id = R.string.login_password_placeholder),
                                             color = Color.White.copy(alpha = 0.4f),
                                             style = MaterialTheme.typography.bodyLarge
                                         )
@@ -283,18 +288,22 @@ fun AccountManagementScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
+                        val emptyPasswordError = stringResource(id = R.string.login_error_empty_password)
+                        val shortPasswordError = stringResource(id = R.string.login_error_short_password)
+                        val underDevError = stringResource(id = R.string.login_error_under_development)
+
                         // Actions Column
                         Column(
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             ActionButton(
-                                text = "Đồng ý",
+                                text = stringResource(id = R.string.btn_agree),
                                 onClick = {
                                     if (passwordInput.isEmpty()) {
-                                        passwordError = "Vui lòng nhập mật khẩu"
+                                        passwordError = emptyPasswordError
                                     } else if (passwordInput.length < 6) {
-                                        passwordError = "Mật khẩu yêu cầu độ dài ít nhất 6 ký tự"
+                                        passwordError = shortPasswordError
                                     } else {
                                         passwordError = null
                                         // Use repository to persist state
@@ -305,14 +314,14 @@ fun AccountManagementScreen(
                                 modifier = Modifier.width(260.dp)
                             )
                             ActionButton(
-                                text = "Quên mật khẩu",
+                                text = stringResource(id = R.string.btn_forgot_password),
                                 onClick = {
-                                    passwordError = "Tính năng này đang được phát triển"
+                                    passwordError = underDevError
                                 },
                                 modifier = Modifier.width(260.dp)
                             )
                             ActionButton(
-                                text = "Huỷ",
+                                text = stringResource(id = R.string.btn_cancel),
                                 onClick = {
                                     passwordInput = ""
                                     passwordError = null
@@ -332,7 +341,7 @@ fun AccountManagementScreen(
                         CustomSuccessCheckmark(modifier = Modifier.size(80.dp))
                         Spacer(modifier = Modifier.height(24.dp))
                         Text(
-                            text = "Đăng nhập thành công!",
+                            text = stringResource(id = R.string.login_success_msg),
                             color = Color.White,
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold

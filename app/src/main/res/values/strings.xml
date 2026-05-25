@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">DemoTVCompose</string>
+    
+    <!-- Navigation / Menu -->
+    <string name="menu_home">Home</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_account">Account Management</string>
+    <string name="menu_evoucher">Evoucher</string>
+    <string name="menu_buy_package">Buy Package</string>
+    <string name="menu_tv">Television</string>
+    <string name="menu_personal">Personal</string>
+
+    <!-- Search Screen -->
+    <string name="search_placeholder">Search</string>
+    <string name="keyboard_clear">CLEAR</string>
+    <string name="keyboard_space">SPACE</string>
+    <string name="keyboard_backspace">BACKSPACE</string>
+    <string name="keyboard_shift">SHIFT</string>
+
+    <!-- Account Management Screen -->
+    <string name="login_email_placeholder">Enter email/phone number</string>
+    <string name="login_password_placeholder">Enter password</string>
+    <string name="login_error_empty_email">Please enter email</string>
+    <string name="login_error_invalid_email">Invalid email format</string>
+    <string name="login_error_empty_password">Please enter password</string>
+    <string name="login_error_short_password">Password must be at least 6 characters</string>
+    <string name="login_error_under_development">This feature is under development</string>
+    <string name="btn_continue">Continue</string>
+    <string name="btn_agree">Agree</string>
+    <string name="btn_forgot_password">Forgot Password</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="login_success_msg">Login successful!</string>
 </resources>
