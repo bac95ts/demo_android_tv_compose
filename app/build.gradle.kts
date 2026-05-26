@@ -17,6 +17,25 @@ android {
 
     }
 
+    flavorDimensions.add("environment")
+    productFlavors {
+        create("vtvTest") {
+            dimension = "environment"
+            applicationId = "vn.vtv.vtvgotv.test"
+            manifestPlaceholders["appName"] = "VTVgo TV Testing"
+        }
+        create("staging") {
+            dimension = "environment"
+            applicationId = "vn.vtv.vtvgotv.staging"
+            manifestPlaceholders["appName"] = "VTVgo TV Staging"
+        }
+        create("production") {
+            dimension = "environment"
+            applicationId = "vn.vtv.vtvgotv"
+            manifestPlaceholders["appName"] = "VTVgo TV"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
