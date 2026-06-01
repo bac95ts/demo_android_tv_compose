@@ -1,10 +1,14 @@
 package vn.vtv.vtvgotv.features.player.di
 
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import vn.vtv.vtvgotv.features.player.presentation.helper.VideoPlayerManager
+import vn.vtv.vtvgotv.features.player.presentation.viewmodel.PlayerViewModel
 
 /**
- * Placeholder for future player injection bindings
+ * Player injection bindings
  */
 val playerModule = module {
-    // e.g., single { PlayerAnalyticsTracker() }
+    single { VideoPlayerManager() }
+    viewModel { PlayerViewModel(get()) }
 }

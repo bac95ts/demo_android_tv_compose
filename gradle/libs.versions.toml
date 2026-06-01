@@ -36,6 +36,7 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version = "2.8.3" }
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version = "1.3.1" }
 androidx-media3-exoplayer-hls = { group = "androidx.media3", name = "media3-exoplayer-hls", version = "1.3.1" }
+androidx-media3-exoplayer-ima = { group = "androidx.media3", name = "media3-exoplayer-ima", version = "1.3.1" }
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version = "1.3.1" }
 
 [plugins]
