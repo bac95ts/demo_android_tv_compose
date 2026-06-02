@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DemoTVCompose</string>
-    
-    <!-- Navigation / Menu -->
+    <string name="locales_map_vi">Vi</string>
+    <string name="locales_map_en">Tiếng Anh</string>
+    <string name="main_tab_home">Home</string>
     <string name="menu_home">Trang chủ</string>
     <string name="menu_search">Tìm kiếm</string>
     <string name="menu_account">Quản lý tài khoản</string>
@@ -9,15 +10,11 @@
     <string name="menu_buy_package">Mua gói</string>
     <string name="menu_tv">Truyền hình</string>
     <string name="menu_personal">Cá nhân</string>
-
-    <!-- Search Screen -->
     <string name="search_placeholder">Tìm kiếm</string>
     <string name="keyboard_clear">XÓA</string>
     <string name="keyboard_space">KHOẢNG CÁCH</string>
     <string name="keyboard_backspace">XÓA KÝ TỰ</string>
     <string name="keyboard_shift">VIẾT HOA</string>
-
-    <!-- Account Management Screen -->
     <string name="login_email_placeholder">Nhập email/số điện thoại</string>
     <string name="login_password_placeholder">Nhập mật khẩu</string>
     <string name="login_error_empty_email">Vui lòng nhập Email</string>
@@ -25,9 +22,9 @@
     <string name="login_error_empty_password">Vui lòng nhập mật khẩu</string>
     <string name="login_error_short_password">Mật khẩu yêu cầu độ dài ít nhất 6 ký tự</string>
     <string name="login_error_under_development">Tính năng này đang được phát triển</string>
-    <string name="btn_continue">Tiếp tục</string>
-    <string name="btn_agree">Đồng ý</string>
-    <string name="btn_forgot_password">Quên mật khẩu</string>
-    <string name="btn_cancel">Huỷ</string>
-    <string name="login_success_msg">Đăng nhập thành công!</string>
+    <string name="login_btn_continue">Tiếp tục</string>
+    <string name="login_btn_agree">Đồng ý</string>
+    <string name="login_btn_forgot_password">Quên mật khẩu</string>
+    <string name="login_btn_cancel">Huỷ</string>
+    <string name="login_login_success_msg">Đăng nhập thành công!</string>
 </resources>

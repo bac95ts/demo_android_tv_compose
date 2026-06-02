@@ -1,0 +1,13 @@
+{
+  "name": "translate",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "make": "node make_json.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv": "^6.2.0"
+  }
+}

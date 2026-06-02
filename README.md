@@ -89,3 +89,21 @@ app/src/main/java/vn/vtv/vtvgotv/
    ./gradlew compileDebugKotlin
    ```
 5. Nhấn **Run** để khởi chạy ứng dụng trực tiếp trên Android TV Emulator hoặc thiết bị Android TV thực tế.
+
+
+## Translate
+
+Thêm nội dung text vào [file](https://docs.google.com/spreadsheets/d/1KpUBKPOnH1SmlTaHqmMKcwK-fUSZ_Eofsuh48buadhM/edit?usp=sharing) và lưu file dạng csv vào folder translate như này:
+
+<p>
+![down_csv_img.png](screenshot/down_csv_img.png)
+![folder_trans_img.png](screenshot/folder_trans_img.png)
+</p>
+
+Sau đó gõ `cd translate && node make_json.js`
+
+Sử dụng:
+
+```
+
+```
