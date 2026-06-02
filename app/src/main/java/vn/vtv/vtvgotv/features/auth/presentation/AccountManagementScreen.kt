@@ -187,7 +187,7 @@ fun AccountManagementScreen(
                         
                         // Continue Button
                         ActionButton(
-                            text = stringResource(id = R.string.btn_continue),
+                            text = stringResource(id = R.string.login_btn_continue),
                             onClick = {
                                 if (emailInput.isEmpty()) {
                                     emailError = emptyEmailError
@@ -303,7 +303,7 @@ fun AccountManagementScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             ActionButton(
-                                text = stringResource(id = R.string.btn_agree),
+                                text = stringResource(id = R.string.login_btn_agree),
                                 onClick = {
                                     if (passwordInput.isEmpty()) {
                                         passwordError = emptyPasswordError
@@ -319,14 +319,14 @@ fun AccountManagementScreen(
                                 modifier = Modifier.width(260.dp)
                             )
                             ActionButton(
-                                text = stringResource(id = R.string.btn_forgot_password),
+                                text = stringResource(id = R.string.login_btn_forgot_password),
                                 onClick = {
                                     passwordError = underDevError
                                 },
                                 modifier = Modifier.width(260.dp)
                             )
                             ActionButton(
-                                text = stringResource(id = R.string.btn_cancel),
+                                text = stringResource(id = R.string.login_btn_cancel),
                                 onClick = {
                                     passwordInput = ""
                                     passwordError = null
@@ -346,7 +346,7 @@ fun AccountManagementScreen(
                         CustomSuccessCheckmark(modifier = Modifier.size(80.dp))
                         Spacer(modifier = Modifier.height(24.dp))
                         Text(
-                            text = stringResource(id = R.string.login_success_msg),
+                            text = stringResource(id = R.string.login_login_success_msg),
                             color = Color.White,
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold
