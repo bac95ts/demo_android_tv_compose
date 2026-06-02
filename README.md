@@ -93,7 +93,7 @@ app/src/main/java/vn/vtv/vtvgotv/
 
 ## Translate
 
-Thêm nội dung text vào [file](https://docs.google.com/spreadsheets/d/1KpUBKPOnH1SmlTaHqmMKcwK-fUSZ_Eofsuh48buadhM/edit?usp=sharing) và lưu file dạng csv vào folder translate như này:
+Thêm nội dung text vào [file](https://docs.google.com/spreadsheets/d/1tKdXrQ2yBG2gjB9hD9n6CLexn2OynRMCFJClUbiieeI/edit?gid=1871376098#gid=1871376098) và lưu file dạng csv vào folder translate như này:
 
 | <img src="screenshots/down_csv_img.png" width="50%" alt="Trang Chủ"/>  | <img src="screenshots/folder_trans_img.png" width="50%" alt="Player"/> |
 
