@@ -95,15 +95,7 @@ app/src/main/java/vn/vtv/vtvgotv/
 
 Thêm nội dung text vào [file](https://docs.google.com/spreadsheets/d/1KpUBKPOnH1SmlTaHqmMKcwK-fUSZ_Eofsuh48buadhM/edit?usp=sharing) và lưu file dạng csv vào folder translate như này:
 
-<p>
-![down_csv_img.png](screenshot/down_csv_img.png)
-![folder_trans_img.png](screenshot/folder_trans_img.png)
-</p>
+| <img src="screenshots/down_csv_img.png" width="50%" alt="Trang Chủ"/>  | <img src="screenshots/folder_trans_img.png" width="50%" alt="Player"/> |
+
 
 Sau đó gõ `cd translate && node make_json.js`
-
-Sử dụng:
-
-```
-
-```
